@@ -2,7 +2,7 @@
 
 namespace SixtyFiveZeroTwo.Cpu
 {
-    public class Instruction
+    public abstract class Instruction
     {
         public Instruction(byte opc, string name, byte length)
         {
@@ -11,12 +11,17 @@ namespace SixtyFiveZeroTwo.Cpu
                 throw new ArgumentNullException(nameof(name));
             }
 
+            if (length == 0)
+            {
+                throw new ArgumentException(nameof(length));
+            }
+
             Opc = opc;
             Name = name;
             Length = length;
         }
 
-        public virtual void Execute(Memory memory, Registers registers)
+        public void Execute(Memory memory, Registers registers)
         {
             _ = registers ?? throw new ArgumentNullException(nameof(registers));
             _ = memory ?? throw new ArgumentNullException(nameof(memory));
@@ -26,6 +31,8 @@ namespace SixtyFiveZeroTwo.Cpu
                 throw new InvalidOperationException();
             }
 
+            PerformExecute(memory, registers);
+
             BeginInstructionExecuted?.Invoke(this, this);
         }
 
@@ -34,6 +41,8 @@ namespace SixtyFiveZeroTwo.Cpu
             Operands = operands ?? throw new ArgumentNullException(nameof(operands));
         }
 
+        protected abstract void PerformExecute(Memory memory, Registers registers);
+        
         public byte Opc { get; }
 
         public string Name { get; }
@@ -42,6 +51,6 @@ namespace SixtyFiveZeroTwo.Cpu
 
         public byte[] Operands { get; private set; } = new byte[] { };
 
-        public event EventHandler<Instruction> BeginInstructionExecuted = delegate {};
+        public event EventHandler<Instruction> BeginInstructionExecuted = delegate { };
     }
 }

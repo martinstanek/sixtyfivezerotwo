@@ -10,7 +10,13 @@ namespace SixtyFiveZeroTwo.Cpu
         {
             new Nop(),
             new Inx(),
-            new LdxImmediate()
+            new Iny(),
+            new Txa(),
+            new Txs(),
+            new Tya(),
+            new Sec(),
+            new LdxImmediate(),
+            new AndImmediate()
         };
 
         public Instruction DecodeInstruction(byte opc)

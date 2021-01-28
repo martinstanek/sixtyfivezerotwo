@@ -1,28 +1,25 @@
 ﻿namespace SixtyFiveZeroTwo.Cpu.Instructions
 {
     /// <summary>
-    /// Increment X
+    /// AND memory with accumulator (immediate)
     /// </summary>
-    public class Inx : Instruction
+    public class AndImmediate : Instruction
     {
-        public Inx() : base(0xE8, "INX", 1) { }
+        public AndImmediate() : base(0x29, "AND", 2) { }
 
         protected override void PerformExecute(Memory memory, Registers registers)
         {
-            if (registers.X == byte.MaxValue)
+            if ((registers.Ac & Operands[0]) > byte.MaxValue)
             {
-                registers.X++;
                 registers.SetFlags(f => f.V = true);
             }
-            else
-            {
-                registers.X++;
-            }
 
-            if (registers.X == 0x00)
+            if ((registers.Ac & Operands[0]) == 0x00)
             {
                 registers.SetFlags(f => f.Z = true);
             }
+
+            registers.Ac &= Operands[0];
         }
     }
 }

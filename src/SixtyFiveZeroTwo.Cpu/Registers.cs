@@ -6,11 +6,13 @@ namespace SixtyFiveZeroTwo.Cpu
     public class Registers
     {
         private ushort _pc;
+        private byte _ac;
         private byte _x;
+        private byte _y;
+        private byte _sr;
+        private byte _sp;
 
         public enum CpuRegisters { Pc, Ac, X, Y, Sr, Sp }
-
-        public Registers() { }
 
         /// <summary>
         /// Program counter
@@ -18,13 +20,17 @@ namespace SixtyFiveZeroTwo.Cpu
         public ushort Pc
         {
             get => _pc;
-            set => _pc = SetRegiserValue(CpuRegisters.Pc, _pc, value);
+            set => SetWideRegisterValue(CpuRegisters.Pc, ref _pc, value);
         }
 
         /// <summary>
         /// Accumulator
         /// </summary>
-        public byte Ac { get; set; }
+        public byte Ac
+        {
+            get => _ac;
+            set => SetRegisterValue(CpuRegisters.Ac, ref _ac, value);
+        }
 
         /// <summary>
         /// X register
@@ -32,23 +38,35 @@ namespace SixtyFiveZeroTwo.Cpu
         public byte X
         {
             get => _x;
-            set => _x = (byte) SetRegiserValue(CpuRegisters.X, _x, value);
+            set => SetRegisterValue(CpuRegisters.X, ref _x, value);
         }
 
         /// <summary>
         /// Y register
         /// </summary>
-        public byte Y { get; set; }
+        public byte Y
+        {
+            get => _y;
+            set => SetRegisterValue(CpuRegisters.Y, ref _y, value);
+        }
 
         /// <summary>
         /// Status register
         /// </summary>
-        public byte Sr { get; set; }
+        public byte Sr
+        {
+            get => _sr;
+            set => SetRegisterValue(CpuRegisters.Sr, ref _sr, value);
+        }
 
         /// <summary>
         /// Stack pointer
         /// </summary>
-        public byte Sp { get; set; }
+        public byte Sp
+        {
+            get => _sp;
+            set => SetRegisterValue(CpuRegisters.Sp, ref _sp, value);
+        }
 
         /// <summary>
         /// Status register as Flags
@@ -59,11 +77,41 @@ namespace SixtyFiveZeroTwo.Cpu
             set => Sr = value.AsStatusRegister();
         }
 
-        private ushort SetRegiserValue(CpuRegisters register, ushort currentValue, ushort newValue)
+        public void SetFlags(Action<Flags> flags)
         {
-            ValueChanged?.Invoke(this, new RegisterValueChangedEventArgs(register, currentValue, newValue));
+            _ = flags ?? throw new ArgumentNullException(nameof(flags));
 
-            return newValue;
+            var newFlags = new Flags(Sr);
+
+            flags(newFlags);
+
+            Flags = newFlags;
+        }
+
+        public void ResetOverflow()
+        {
+            if (Flags.V)
+            {
+                SetFlags(f => f.V = false);
+            }
+        }
+
+        private void SetRegisterValue(CpuRegisters register, ref byte currentValue, byte newValue)
+        {
+            var oldValue = currentValue;
+
+            currentValue = newValue;
+
+            ValueChanged?.Invoke(this, new RegisterValueChangedEventArgs(register, oldValue, newValue, new Flags(Sr)));
+        }
+        
+        private void SetWideRegisterValue(CpuRegisters register, ref ushort currentValue, ushort newValue)
+        {
+            var oldValue = currentValue;
+
+            currentValue = newValue;
+
+            ValueChanged?.Invoke(this, new RegisterValueChangedEventArgs(register, oldValue, newValue, new Flags(Sr)));
         }
 
         public event EventHandler<RegisterValueChangedEventArgs> ValueChanged = delegate { };

@@ -16,9 +16,10 @@ namespace SixtyFiveZeroTwo.Demo
                 0xA2, 0x41, // LDX 0x41
                 0xE8,       // INX
                 0xE8,       // INX
-                0xE8,       // INX
-                0xE8,       // INX
-                0xEA,       // NOP
+                0x8A,       // TXA
+                0x29, 0xFF, // AND
+                0x9A,       // TXS
+                0x98        // TYA
             };
 
             var processor = new Processor();
@@ -28,6 +29,11 @@ namespace SixtyFiveZeroTwo.Demo
                 if (e.Register == Registers.CpuRegisters.X)
                 {
                     Console.WriteLine(Encoding.ASCII.GetString(new[] { (byte) e.NewValue }));
+                }
+
+                if (e.Register == Registers.CpuRegisters.Sr && e.Flags.V)
+                {
+                    Console.WriteLine("Overflow");
                 }
             };
 

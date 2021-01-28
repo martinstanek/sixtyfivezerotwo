@@ -1,25 +1,25 @@
 ﻿namespace SixtyFiveZeroTwo.Cpu.Instructions
 {
     /// <summary>
-    /// Increment X
+    /// Increment Y
     /// </summary>
-    public class Inx : Instruction
+    public class Iny : Instruction
     {
-        public Inx() : base(0xE8, "INX", 1) { }
+        public Iny() : base(0xC8, "INY", 1) { }
 
         protected override void PerformExecute(Memory memory, Registers registers)
         {
-            if (registers.X == byte.MaxValue)
+            if (registers.Y == byte.MaxValue)
             {
-                registers.X++;
+                registers.Y++;
                 registers.SetFlags(f => f.V = true);
             }
             else
             {
-                registers.X++;
+                registers.Y++;
             }
 
-            if (registers.X == 0x00)
+            if (registers.Y == 0x00)
             {
                 registers.SetFlags(f => f.Z = true);
             }
