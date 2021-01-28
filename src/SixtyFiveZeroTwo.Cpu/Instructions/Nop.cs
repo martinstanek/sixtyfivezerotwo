@@ -5,7 +5,10 @@
     /// </summary>
     public class Nop : Instruction
     {
-        public Nop() : base(0xEA, "NOP", 1) { }
+        public Nop() : base("NOP")
+        {
+            AddFlawor(0xEA, 1);
+        }
 
         protected override void PerformExecute(Memory memory, Registers registers) { }
     }

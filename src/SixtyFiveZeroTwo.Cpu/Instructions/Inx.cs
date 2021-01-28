@@ -5,7 +5,10 @@
     /// </summary>
     public class Inx : Instruction
     {
-        public Inx() : base(0xE8, "INX", 1) { }
+        public Inx() : base("INX")
+        {
+            AddFlawor(0xE8, 1);
+        }
 
         protected override void PerformExecute(Memory memory, Registers registers)
         {

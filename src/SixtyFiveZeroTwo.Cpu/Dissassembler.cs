@@ -28,19 +28,18 @@ namespace SixtyFiveZeroTwo.Cpu
             }
 
             var opc = _memory.Content[_registers.Pc];
-
             var instruction = _instructionSet.DecodeInstruction(opc);
+            var length = instruction.GetLength(opc);
+            var operands = new byte[length - 1];
 
-            if (instruction.Length > 1)
+            if (length > 1)
             {
-                var operands = new byte[instruction.Length - 1];
-
                 Array.Copy(_memory.Content, _registers.Pc + 1, operands, 0, operands.Length);
-
-                instruction.Load(operands);
             }
 
-            _registers.Pc += instruction.Length;
+            instruction.Load(opc, operands);
+
+            _registers.Pc += length;
 
             return instruction;
         }

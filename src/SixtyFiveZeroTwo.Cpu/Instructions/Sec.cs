@@ -5,7 +5,10 @@
     /// </summary>
     public class Sec : Instruction
     {
-        public Sec() : base(0x38, "SEC", 1) { }
+        public Sec() : base("SEC")
+        {
+            AddFlawor(0x38, 1);
+        }
 
         protected override void PerformExecute(Memory memory, Registers registers)
         {

@@ -5,7 +5,10 @@
     /// </summary>
     public class Iny : Instruction
     {
-        public Iny() : base(0xC8, "INY", 1) { }
+        public Iny() : base("INY")
+        {
+            AddFlawor(0xC8, 1);
+        }
 
         protected override void PerformExecute(Memory memory, Registers registers)
         {

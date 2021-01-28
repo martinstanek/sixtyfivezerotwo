@@ -5,7 +5,10 @@
     /// </summary>
     public class Tya : Instruction
     {
-        public Tya() : base(0x98, "TYA", 1) { }
+        public Tya() : base("TYA")
+        {
+            AddFlawor(0x98, 1);
+        }
 
         protected override void PerformExecute(Memory memory, Registers registers)
         {

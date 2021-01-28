@@ -5,7 +5,10 @@
     /// </summary>
     public class Txa : Instruction
     {
-        public Txa() : base(0x8A, "TXA", 1) { }
+        public Txa() : base("TXA")
+        {
+            AddFlawor(0x8A, 1);
+        }
 
         protected override void PerformExecute(Memory memory, Registers registers)
         {

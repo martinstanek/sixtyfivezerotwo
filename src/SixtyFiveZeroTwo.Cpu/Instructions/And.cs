@@ -1,11 +1,14 @@
 ﻿namespace SixtyFiveZeroTwo.Cpu.Instructions
 {
     /// <summary>
-    /// AND memory with accumulator (immediate)
+    /// AND memory with accumulator
     /// </summary>
-    public class AndImmediate : Instruction
+    public class And : Instruction
     {
-        public AndImmediate() : base(0x29, "AND", 2) { }
+        public And() : base("AND")
+        {
+            AddFlawor(0x29, 2);
+        }
 
         protected override void PerformExecute(Memory memory, Registers registers)
         {

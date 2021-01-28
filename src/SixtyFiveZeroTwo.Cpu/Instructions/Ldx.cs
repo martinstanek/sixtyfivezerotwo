@@ -1,12 +1,15 @@
 ﻿namespace SixtyFiveZeroTwo.Cpu.Instructions
 {
     /// <summary>
-    /// Load memory to X (immediate)
+    /// Load memory to X
     /// </summary>
-    public class LdxImmediate : Instruction
+    public class Ldx : Instruction
     {
-        public LdxImmediate() : base(0xA2, "LDX", 2) { }
-
+        public Ldx() : base("LDX")
+        {
+            AddFlawor(0xA2, 2);
+        }
+        
         protected override void PerformExecute(Memory memory, Registers registers)
         {
             registers.X = Operands[0];

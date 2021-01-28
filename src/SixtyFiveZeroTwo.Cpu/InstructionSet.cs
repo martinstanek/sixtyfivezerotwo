@@ -6,7 +6,7 @@ namespace SixtyFiveZeroTwo.Cpu
 {
     public class InstructionSet
     {
-        private readonly List<Instruction> _instructionSet = new List<Instruction>()
+        private readonly List<Instruction> _instructions = new List<Instruction>()
         {
             new Nop(),
             new Inx(),
@@ -15,13 +15,15 @@ namespace SixtyFiveZeroTwo.Cpu
             new Txs(),
             new Tya(),
             new Sec(),
-            new LdxImmediate(),
-            new AndImmediate()
+            new Ldx(),
+            new And()
         };
 
         public Instruction DecodeInstruction(byte opc)
         {
-            return _instructionSet.Single(i => i.Opc.Equals(opc));
+            return _instructions.Single(i => i.CanExecute(opc));
         }
+
+        public IReadOnlyCollection<Instruction> LegalInstructions => _instructions;
     }
 }
